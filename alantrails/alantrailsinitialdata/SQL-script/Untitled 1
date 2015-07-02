@@ -8,7 +8,17 @@ velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileL
 
 
 01.07.2015 12:29:07: ERROR: Can not resolve any more lines ... Aborting further passes (at pass 3). Finally could not import 2 lines!
-01.07.2015 12:29:07: ERROR: Can not resolve any more lines ... Aborting further passes (at pass 3). Finally could not import 2 lines!
+01.07.use trails_hybris;
+select * from BaseStore;
+show COLUMNS from BaseStore;
+
+select * from CMSSite;
+show COLUMNS from CMSSite;
+
+show COLUMNS from cmscomponent;
+
+ SELECT p_url FROM cmscomponent  
+ #where p_name like'CMSLinkComponent%';2015 12:29:07: ERROR: Can not resolve any more lines ... Aborting further passes (at pass 3). Finally could not import 2 lines!
 
 								
 Page description
