@@ -18,8 +18,8 @@ UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[l
 # CMS Link Components
 UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
 ;;HomepageNavLink;"Home"
-;;StuffCategoryLink;"Stuff"
-;;ClothesCategoryLink;"Clothes"
+;;StuffCategoryLink;"Resource-Alantrails"
+;;ClothesCategoryLink;"Clothes-Alantrails"
 ;;AboutAcceleratorLink;"About Commerce Accelerator"
 ;;AboutHybrisLink;"About hybris"
 ;;AccountAddressBookLink;"Address Book"
@@ -116,7 +116,7 @@ UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[l
 ;;NextDayDeliveryBanner120;Elec_788x120_HomeDeliveryBanner_EN_01.jpg
    
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
-;;welcomeMessage;"<h1>Welcome to the hybris Merchandise Shop</h1>"
+;;welcomeMessage;"<h1>Alan Shops Sample</h1>"
   
 # CMS PurchasedCategorySuggestion Components
 UPDATE PurchasedCategorySuggestionComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
