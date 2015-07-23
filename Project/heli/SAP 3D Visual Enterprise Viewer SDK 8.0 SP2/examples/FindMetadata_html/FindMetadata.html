@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Find Metadata Example</title>
+    </head>
+
+    <body>
+		<h3>Find Metadata Example</h3>
+		<object id="DVPlugin" type="application/rh" width="100%" height=600px">	
+			<div align="center">Couldn't instantiate DVPlugin for some reason</div>
+		</object>
+
+        <script type="text/javascript">
+
+// Initialisation
+var dvPlugin;
+
+
+
+// Main part
+var sceneMetaData = new Object();
+
+function GetNodeMetadataStrings()
+{
+	var nodes = dvPlugin.Scene.Nodes;
+	var nodeCount = dvPlugin.Scene.Nodes.Count;
+
+	// Traverse all the Scene's nodes
+	for (var i = 0; i < nodeCount; i++)
+	{
+		var node = nodes.GetByIndex(i);
+		sceneMetaData["" + node.ObjectID] = new Object();
+		PopulateMetaDataForNode(sceneMetaData, node, node.Metadata, "");
+	} 
+}
+
+function GetMetadataVariableStringValue(metadataVariable)
+{
+	if (
+		metadataVariable.Type == metadataVariable.TYPE_BOOL || 
+		metadataVariable.Type == metadataVariable.TYPE_DOUBLE ||
+		metadataVariable.Type == metadataVariable.TYPE_FLOAT ||
+		metadataVariable.Type == metadataVariable.TYPE_INT ||
+		metadataVariable.Type == metadataVariable.TYPE_INT64 ||
+		metadataVariable.Type == metadataVariable.TYPE_STRING)
+	{
+		return ""+metadataVariable.Value;
+	}
+	if (metadataVariable.Type == metadataVariable.TYPE_POINT3D)
+	{
+		var vector = metadataVariable.Value;
+		if (vector != null)
+			return "("+vector.X+","+vector.Y+","+vector.Z+")";
+	}
+	
+	// Value is not implemented for the other types
+	return null;
+}
+
+function PopulateMetaDataForNode(nodeMetaData, node, metadataVariable, pathToVariable)
+{
+	if (node == null || metadataVariable == null) return;
+
+	if (metadataVariable.Type == metadataVariable.TYPE_ARRAY || metadataVariable.Type == metadataVariable.TYPE_OBJECT)
+	{
+		var size = metadataVariable.Size;
+		for (var j=0; j < size; j++)  // Traverse all metadata for this node
+		{
+			var key = "" + metadataVariable.KeyAt(j);
+			var metadataVariableValue = metadataVariable.ValueAt(j);
+
+			var newPath;
+			if (pathToVariable == "")
+				newPath = key;
+			else
+				newPath = pathToVariable + "." + key;
+
+			PopulateMetaDataForNode(nodeMetaData, node, metadataVariableValue, newPath);
+		}
+	}
+
+	var metadataVariableStringValue = GetMetadataVariableStringValue(metadataVariable);
+	if (metadataVariableStringValue != null)
+		nodeMetaData["" + node.ObjectID][pathToVariable] = GetMetadataVariableStringValue(metadataVariable);
+}
+
+function buttonSelectNodes_Click()
+{
+	var metadataString = document.getElementById("textToSearchFor").value;
+	dvPlugin.Scene.SelectAll(false);    // Clear the selection
+
+	var nodes = dvPlugin.Scene.Nodes;
+	for (var i = 0; i < nodes.count; i++)
+	{
+		var node = nodes.item(i);
+		var metadataList = sceneMetaData["" + node.ObjectID];  // Store ObjectId's in a table
+		for (var key in metadataList)
+		{
+			var val = metadataList[key];
+			if (key.indexOf(metadataString) != -1 || val.indexOf(metadataString) != -1)
+			{
+				node.Selected = true;
+				break;
+			}
+		}
+	}
+}
+
+function selectionChanged(nodes)
+{
+	var all_colors = [];
+	for (var i = 0; i < nodes.count; i++)
+	{
+		var node = nodes.item(i);
+
+		var m = node.Metadata.Item("Test Metadata").Item("Color");
+		var str = GetMetadataVariableStringValue(m);
+		all_colors.push(str);
+	}
+
+	if (all_colors.length == 0) all_colors = "None";
+
+	document.getElementById("colors").innerHTML = all_colors;
+}
+
+function windowOnLoad()
+{
+	dvPlugin = document.getElementById("DVPlugin");
+	dvPlugin.NodesSelected = selectionChanged;
+	dvPlugin.SceneLoaded = sceneLoaded;
+	dvPlugin.FileName = "RealightTransmissionWithMetadata.rh";
+
+	selectionChanged([]);
+}
+
+function sceneLoaded()
+{
+	GetNodeMetadataStrings();
+	dvPlugin.ExecuteCommand("Zoom Best Fit"); // This doesnt work
+}
+
+window.onload = windowOnLoad;
+
+        </script>
+        <input id="textToSearchFor" name="textToSearchFor">
+        <input id="selectNodes" type="button" value="Select Nodes" 
+        onclick="return buttonSelectNodes_Click()">
+	<p>The colors of selected nodes: <span id="colors"></span></p>
+  </body>
+</html>
+
+
+

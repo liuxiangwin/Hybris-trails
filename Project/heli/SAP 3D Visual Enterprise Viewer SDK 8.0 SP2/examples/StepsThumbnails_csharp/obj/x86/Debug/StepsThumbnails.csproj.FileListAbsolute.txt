@@ -1,0 +1,14 @@
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\Interop.Exploration3D.dll
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\AxInterop.Exploration3D.dll
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\StepsThumbnails.csproj.ResolveComReference.cache
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\bin\x86\Debug\Steps_Metadata_Parse_v2.rh
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\bin\x86\Debug\WindowsApplication2.exe
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\bin\x86\Debug\WindowsApplication2.pdb
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\bin\x86\Debug\Interop.Exploration3D.dll
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\bin\x86\Debug\AxInterop.Exploration3D.dll
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\StepsThumbnails.csprojResolveAssemblyReference.cache
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\WindowsApplication2.frmStepThumbnailDemo.resources
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\WindowsApplication2.Properties.Resources.resources
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\StepsThumbnails.csproj.GenerateResource.Cache
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\WindowsApplication2.exe
+S:\NewWorldOrder\ViewerWin\Main\examples\StepsThumbnails_csharp\obj\x86\Debug\WindowsApplication2.pdb

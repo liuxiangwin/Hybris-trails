@@ -1,0 +1,80 @@
+<html>
+<head>
+<title></title>
+<script type="text/javascript">
+
+function element(id) { return document.getElementById(id); }
+function rh() { return element("ev3d"); }
+
+function LoadFile_data_blank()
+{
+    rh().LoadFile("data:blank");// <<- this is how create a blank scene.
+}
+
+function addModel() 
+{
+	var fname = element("File1").value;
+	if(fname.length == 0)
+	{
+		alert("Please browse for an rh file to load");
+		return;
+	}
+	alert("Trying file: " + fname);
+
+	var resource = rh().Creator.resource.create(fname);
+	var node = null;
+	try 
+	{
+		node = rh().scene.addModel(resource);
+	}
+	catch(exception )
+	{
+	}
+
+	if (!node)
+	{
+		alert("addModel failed to load: '" + fname + "'");
+		return;
+	}
+
+	var x = parseFloat(element("TextX").value);
+	var y = parseFloat(element("TextY").value);
+	var z = parseFloat(element("TextZ").value);
+	var moveVector = rh().Creator.Matrix4x4.create3(1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1);
+	node.transform = moveVector;
+	alert("added Model at (" + x + "," + y + "," + z + ")");
+}
+</script>
+</head>
+
+<body>
+<p>
+<object id="ev3d" style="width: 600px; height: 400px" type="application/rh">
+</object>
+</P>
+<p>
+    1. Clear the scene:
+    &nbsp;<input id="Button6" type="button" value='LoadFile("data:blank")' onclick="return LoadFile_data_blank()" /></p>
+
+<p></p>
+      
+<p>
+
+    Please type in the full path of the file to add.
+    <br>
+    2. Merge file: &nbsp;<input id="File1" style="width: 611px" type="text" />
+</p>
+
+<p>
+    at position:&nbsp; &nbsp;x <input id="TextX" style="width: 71px" type="text" value="0" />
+    y <input id="TextY" style="width: 72px" type="text" value="0" />
+    z <input id="TextZ" style="width: 71px" type="text" value="999" />
+</p>
+
+<p>
+    do it:
+    <input id="Button5" type="button" value="scene.addModel" onclick="return addModel()" />
+</p>
+
+</body>
+</html>

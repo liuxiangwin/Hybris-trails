@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<title>Intermediate Metadata Retrieval Example</title>
+		<style type="text/css">
+            .custom_width_for_left_side {
+                width: 600px;
+            }
+			#wrap {
+			   margin:0 auto;
+			}
+			#left_col {
+			   float:left;
+			}
+			#right_col {
+			   float:right;
+			   width:600px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+
+            <div id="left_col" class="custom_width_for_left_side">
+                Click button to retrieve all metadata for that part:
+                <br/>
+                <button id="a">81-Primary Driven Gear</button>
+                <br />
+                <button id="b" style="visibility: hidden;" />47-Diff Half</button>
+                <br />
+                <button id="c" style="visibility: hidden;" />74-Middle Gear</button>
+                <br />
+                <br />
+                <br />
+                <br />
+                Metadata output:
+                <textarea id="pane" class="custom_width_for_left_side" style="height: 150px;"></textarea>
+            </div>
+            <div id="right_col" class="custom_width_for_left_side">
+                <object id="vevObject" type="application/rh" width="100%" height=600px">
+                    <param name="FileName" value="RealightTransmissionWithMetadata.rh">
+                    <div align="center">Couldn't instantiate DVPlugin for some reason</div>
+                </object>
+            </div> 
+		</div>
+		<script type="text/javascript">
+			// Initialisation
+
+			var a = document.getElementById("a");
+			a.onclick = aWasClicked;
+			
+			var b = document.getElementById("b");
+			b.onclick = bWasClicked;
+			
+			var c = document.getElementById("c");
+			c.onclick = cWasClicked;
+
+			function element(id) { return document.getElementById(id); }
+			
+			function vev() { return element("vevObject"); }
+			
+			function aWasClicked()
+			{
+				fillPaneWithMetadataFromNode("81-Primary Driven Gear");
+			}
+
+			function bWasClicked()
+			{
+				fillPaneWithMetadataFromNode("47-Diff Half");
+			}
+			
+			function cWasClicked()
+			{
+				fillPaneWithMetadataFromNode("74-Middle Gear");
+			}
+			
+			function fillPaneWithMetadataFromNode(nodeName)
+			{
+				var outputString = "";
+				var metadataVariable = vev().Scene.Nodes.GetByName(nodeName).Metadata;
+				document.getElementById("pane").value = populateStringWithMetadataRecursively(metadataVariable, outputString,"");
+			}
+
+			function populateStringWithMetadataRecursively(metadataVariable, outputString, currentPath)
+			{
+			    if (metadataVariable.Type != metadataVariable.TYPE_ARRAY && metadataVariable.Type != metadataVariable.TYPE_OBJECT)
+			    {
+                    // dump currentpath and value
+			        var val = metadataVariable.value;
+			        outputString = outputString + currentPath + "=" + val +"\n";
+			    }
+			    else {
+                    // ... recurse through child metadata nodes
+					var size = metadataVariable.Count;
+					for (var j=0; j < size; j++)  
+					{
+					    var child = metadataVariable.Item(j);
+					    var key = metadataVariable.keyAt(j);
+
+                        // don't show private nodes
+					    if (key.length >0 && key.substr(0, 1) == "$")
+					        continue;
+
+					    
+					    var fullCurrentPath = currentPath + "\\" + key;
+					    outputString = populateStringWithMetadataRecursively(child, outputString, fullCurrentPath);
+					}
+				}
+	
+				return outputString;
+			}
+		</script>
+	</body>
+</html>
+
+
+

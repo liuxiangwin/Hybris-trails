@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+	<style>
+		p.controls span {display:inline-block;width:150px;}
+		p.controls input, input[type="button"] {width:100px;}
+	</style>
+	<SCRIPT ID=clientEventHandlersJS LANGUAGE=javascript>
+<!--
+
+function element(id) { return document.getElementById(id); }
+function rh() { return element("ev3d"); }
+
+
+function LoadFile()
+{
+	rh().LoadFile(element("File1").value);
+}
+
+function BadNodeWarning()
+{
+	alert("nothing selected");
+}
+
+function UpdateScene()
+{
+	rh().Scene.update();
+}
+
+function getSelected() 
+{
+	var nodes = rh().Scene.nodes;
+	for (var i = 0; i < nodes.count; i++)
+	{
+		n = nodes.getByIndex(i);
+		if(n.selected) return n;
+	}
+	return null;
+}
+
+function MoveWorld_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+
+	// rotate in world coords
+	var aBit = rh().Creator.Vector3.create(10, 0, 0);
+	n.transform.translateInPlace(aBit); 
+	UpdateScene();
+}
+
+function MoveLocal_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+
+	// move in local coords
+	var vector = rh().Creator.Vector3.create(10, 0, 0);
+	try 
+	{
+		vector = n.parent.transform.transformDirection(vector);
+	}
+	catch(a) {}
+	
+	n.transform.translateInPlace(vector);
+	UpdateScene();
+}
+
+function RotateWorld_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+
+	// rotate in world coords
+	n.transform.rotateAboutZInplace(3.14159/7); 
+	UpdateScene();
+}
+
+
+function RotateLocal_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+ 
+	// rotate in local coords
+	var vFromOrigin = n.transform.translation;
+	var vToOrigin = rh().Creator.Vector3.create(-vFromOrigin.x, -vFromOrigin.y, -vFromOrigin.z);
+	n.transform.translateInPlace(vToOrigin);
+	n.transform.rotateAboutZInplace(3.14159/7); 
+	n.transform.translateInPlace(vFromOrigin);
+	UpdateScene();
+}
+
+function ScaleWorld_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+
+	// rotate in world coords
+	n.transform.scaleInPlace(1.1,1.1,1.1); 
+	UpdateScene();
+}
+
+function ScaleLocal_onclick()
+{
+	var n = getSelected();
+	if(!n) return BadNodeWarning();
+ 
+	// scale in local coords
+	var vFromOrigin = n.transform.translation;
+	var vToOrigin = rh().Creator.Vector3.create(-vFromOrigin.x, -vFromOrigin.y, -vFromOrigin.z);
+	n.transform.translateInPlace(vToOrigin);
+	n.transform.scaleInplace(1.1,1.1,1.1); 
+	n.transform.translateInPlace(vFromOrigin); 
+	UpdateScene();
+}
+
+//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+
+<P>
+<OBJECT id="ev3d" style="WIDTH: 600px; HEIGHT: 400px" type="application/rh"></OBJECT>
+</P>
+	<p>
+		Please type in the full path of the file to load.<br>
+		<input id="File1" style="width: 611px" type="text" />
+	        &nbsp;<input id="Button6" type="button" value='Load File' onclick="return LoadFile()" >
+	</p>
+	<p class="controls">
+		<span>World transformations:</span>
+	        <input id="MoveWorld" type="button" value="Move" onclick="return MoveWorld_onclick()" >
+        	<input id="RotateWorld" type="button" value="Rotate" onclick="return RotateWorld_onclick()" >
+	        <input id="ScaleWorld" type="button" value="Scale" onclick="return ScaleWorld_onclick()" >
+	</p>
+	<p class="controls">
+		<span>Local transfromations:</span>
+	        <input id="MoveLocal" type="button" value="Move" onclick="return MoveLocal_onclick()" >
+        	<input id="RotateLocal" type="button" value="Rotate" onclick="return RotateLocal_onclick()" >
+	        <input id="ScaleLocal" type="button" value="Scale" onclick="return ScaleLocal_onclick()" >
+	</p>
+</BODY>
+</HTML>

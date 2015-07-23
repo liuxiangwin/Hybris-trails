@@ -1,0 +1,19 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindMetadata", "FindMetadata.csproj", "{CF7A303D-54E9-446F-AA54-E02CC734AEFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF7A303D-54E9-446F-AA54-E02CC734AEFE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CF7A303D-54E9-446F-AA54-E02CC734AEFE}.Debug|Any CPU.Build.0 = Debug|x86
+		{CF7A303D-54E9-446F-AA54-E02CC734AEFE}.Release|Any CPU.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

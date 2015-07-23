@@ -1,0 +1,263 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html> 
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<title>Test page</title>
+
+<style type="text/css">
+	* {
+		font-family: Verdana, Arial;
+	}
+
+	h1 {
+		text-align:center;
+		border-bottom:1px solid #AAA;
+		margin-bottom:10px;
+		color:#666;
+	}
+
+	h3 {
+		font-size:12px;
+		font-weight:bold;
+		margin: 0;
+		padding: 0 0 4px 0;
+		color: #666;
+	}
+
+	#all {
+		width:900px;
+		margin:auto;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #AAA;
+	}
+
+	#DeepViewDiv {
+		width: 600px;
+		height: 400px;
+		float:left;
+		text-align:center;
+	}
+
+	#DeepView {
+		width: 100%;
+		height: 100%;
+	}
+
+	#right {
+		padding-left: 620px;
+		height:400px;
+	}
+
+	#Results {
+		height:311px;
+		overflow-y: scroll;
+		padding: 4px;
+		font-size: 10pt;
+	}
+
+	#MouseMove {
+		text-align: center;
+		padding: 4px 0 4px 0;
+		font-size: 14pt;
+		margin-bottom: 10px;
+	}
+
+	.output {
+		background-color: #EEE;
+		border: 1px solid #E0E0E0;
+	}
+
+	#bottom {
+		clear: both;
+		text-align:center;
+	}
+	
+	#bottom input {margin-top: 10px;}
+
+</style>
+
+<script type="text/javascript">
+
+	var g_MovementsCount = 0;
+	
+	var g_Action, g_Behavior;
+	
+	function element(id) { return document.getElementById(id); }
+	function rh() { return element("DeepView"); }
+
+	function playFirstStep()
+	{
+		var step = rh().Scene.Steps.GetByIndex(0);
+		step.Play();
+	}
+
+	function logString(str)
+	{
+		var eventReport = element("Results");
+		if (eventReport == null) return;
+		eventReport.innerHTML += str + "<br>";
+		eventReport.scrollTop = eventReport.scrollHeight;
+	}
+
+	function handleStepEvent(e) 
+	{
+		var eventReport = element("Results");
+		if (eventReport == null) return;
+
+		if (e.IsStepStarted)
+			logString("Step Started");
+
+		if (e.IsStepFinished)
+			logString("Step Finished");
+	}
+
+	function handleMouseEvent(e)
+	{
+		if (e.IsDoubleClick)
+			logString("Mouse Double Clicked");
+		if (e.IsMouseDown)
+			logString("Mouse Down");Text
+		if (e.IsMouseUp)
+			logString("Mouse Up");
+		if (e.IsMouseHit)
+			logString("Mouse Hit");
+		if (e.IsMouseOut)
+			logString("Mouse Out");
+		if (e.IsMouseOver)
+			logString("Mouse Over");
+ 		
+		if (e.IsMouseMove)
+		{
+			g_MovementsCount++;
+			var mm = element("MouseMove");
+			if (mm != null) mm.innerHTML = g_MovementsCount;
+		}
+	}
+
+	function handleNodesSelected(selection)
+	{
+		var output = 'NodesSelected: ';
+		for (var i=0; i < selection.count; i++)
+		{
+			var node = selection.item(i);
+			
+			output += node.name + ', ';
+			
+			if (node.HotspotActionCount > 0)
+			{
+				var hid = rh().Scene.SelectedHotspotActionIndex;
+
+				if (hid >= 0)
+				{
+					g_Action = node.HotspotAction(hid);
+					g_Behavior = node.HotspotBehavior(hid)
+					document.getElementById("hotspotAction").innerHTML = "Action: " + g_Action + "<br>Behavior: " + g_Behavior;
+					document.getElementById("hotspotResult").innerHTML = "Not Executed";
+				}
+				else
+				{
+					g_Action = "";
+					g_Behavior = "";
+					document.getElementById("hotspotAction").innerHTML = "Action: -<br>Behavior: -";
+					document.getElementById("hotspotResult").innerHTML = "Dialog cancelled";
+				}
+			}
+		}
+		logString(output);
+		
+		
+		
+		return false;
+	}
+
+	function onSceneLoaded()
+	{
+	    logString("Scene Loaded");
+
+		var creator = rh().Creator;
+		var runtime = rh().Runtime;
+
+		// Create StepEventHandler and attach it to DeepView runtime
+		if (creator.StepEventHandler)
+		{
+			var stepEventHandler = creator.StepEventHandler.Create();
+			stepEventHandler.OnEvent = handleStepEvent;
+			runtime.AddEventHandler(stepEventHandler);
+		}
+		
+		// Create MouseEventHandler and attach it to DeepView runtime
+		var mouseEventHandler = creator.MouseEventHandler.Create();
+		mouseEventHandler.OnEvent = handleMouseEvent;
+		mouseEventHandler.OnMouseDoubleClick = true;
+		mouseEventHandler.OnMouseDown = true;
+		mouseEventHandler.OnMouseUp = true;
+		mouseEventHandler.OnMouseHit = true;
+		mouseEventHandler.OnMouseMove = true;
+		mouseEventHandler.OnMouseOut = true;
+		mouseEventHandler.OnMouseOver = true;
+		runtime.AddEventHandler(mouseEventHandler);
+
+		// Attach nodesSelected event
+		rh().NodesSelected = handleNodesSelected;
+		
+		rh().ShowGUIElement("right_toolbar", false);
+		
+        // Add custom menu item and menu event handler
+		runtime.AddCustomMenuItem("custom1", "Custom Menu 1", "default", false);
+		runtime.AddCustomMenuItem("custom2", "Custom Menu 2", "checked", false);
+
+		var menuEventHandler = creator.MenuEventHandler.Create();
+		menuEventHandler.onEvent = handleMenuEvent;
+		runtime.addEventHandler(menuEventHandler);
+	}
+	
+	function handleMenuEvent(e)
+	{
+		var name = e.MenuItemName;
+		var checked = e.MenuItemChecked;
+		
+		alert("Menu clicked: " + name + "\nChecked state: " + checked);
+	}
+
+	function onProgress(int1, int2, message) {
+	    logString("Progress ");
+	}
+	
+
+	function initialisePage()
+	{
+		if (rh() != null)
+			rh().SceneLoaded = onSceneLoaded;
+		rh().Progress = onProgress;
+		rh().FileName = "RealiteTransmissioncomp Steps.rh";
+	}
+</script>
+</head>
+<body onload="initialisePage()">
+	<div id="all">
+		<h1>Events Example</h1>
+	
+		<div id="DeepViewDiv">
+			<object id="DeepView" type="application/rh">
+				<!--param name="FileName" value="RealiteTransmissioncomp Steps.rh"-->
+			</object>
+		</div>
+
+		<div id="right">
+			<h3>Mouse movements:</h3>
+			<div id="MouseMove" class="output">0</div> 
+	
+			<h3>Events log</h3>
+			<div id="Results" class="output"></div>
+		</div>
+  	</div>
+	<div id="bottom">
+		<div id="hotspotAction"></div>
+		<div id="hotspotResult"></div>
+		<input value="Play The First Step" type="button" onclick="playFirstStep()">
+		<!--<input value="Execute Above Hotspot Action" type="button" onclick="executeHotspot()">-->
+	</div>
+</body>
+</html>
