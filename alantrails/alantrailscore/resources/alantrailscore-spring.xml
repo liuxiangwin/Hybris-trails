@@ -477,6 +477,9 @@
 		<property name="rootCategoryCode" value="categories" />
 	</bean>
 	
+	<bean id="dynamicHybrisCustomerAttributeBean"
+      class="de.hybris.alantrails.core.model.DynamicHybrisCustomerAttributeBean"/>
+	
 	
 	<!-- trails add bean -->
 
